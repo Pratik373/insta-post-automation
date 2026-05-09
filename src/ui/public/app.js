@@ -4,6 +4,7 @@ const runButton = document.querySelector("#runButton");
 const audioUpload = document.querySelector("#audioUpload");
 
 let currentSettings;
+let runInFlight = false;
 
 async function loadSettings() {
   const response = await fetch("/api/settings");
@@ -16,6 +17,7 @@ function fillForm(settings) {
   form.postType.value = settings.postType;
   form.pipelinePhase.value = settings.pipelinePhase;
   form.contentMode.value = settings.contentMode || "auto";
+  form.imageProvider.value = settings.imageProvider || "local";
   form.layoutMode.value = settings.layoutMode || "auto";
   form.slideCount.value = settings.slideCount;
   form.secondsPerSlide.value = settings.reel.secondsPerSlide;
@@ -36,7 +38,7 @@ function readForm() {
     contentMode: form.contentMode.value,
     layoutMode: form.layoutMode.value,
     slideCount: Number(form.slideCount.value),
-    imageProvider: "local",
+    imageProvider: form.imageProvider.value,
     brandName: form.brandName.value,
     newsPrompt: form.newsPrompt.value,
     slidePrompt: form.slidePrompt.value,
@@ -85,6 +87,12 @@ audioUpload.addEventListener("change", async () => {
 });
 
 runButton.addEventListener("click", async () => {
+  if (runInFlight) {
+    return;
+  }
+
+  runInFlight = true;
+  runButton.disabled = true;
   writeStatus("Pipeline running...");
   await fetch("/api/settings", {
     method: "POST",
@@ -92,7 +100,6 @@ runButton.addEventListener("click", async () => {
     body: JSON.stringify(readForm())
   });
 
-  runButton.disabled = true;
   const poller = window.setInterval(loadLogs, 1200);
 
   try {
@@ -107,6 +114,7 @@ runButton.addEventListener("click", async () => {
     }
   } finally {
     window.clearInterval(poller);
+    runInFlight = false;
     runButton.disabled = false;
     loadLogs();
   }

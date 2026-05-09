@@ -14,6 +14,21 @@ export async function runAutomation(): Promise<void> {
   const config = getConfig();
   const settings = await loadSettings();
   const slideCount = settings.slideCount || config.slideCount;
+  warnIfPromptConflictsWithSlideCount(slideCount, settings.newsPrompt, settings.slidePrompt);
+
+  console.log("Automation settings:");
+  console.log(JSON.stringify({
+    postType: settings.postType,
+    slideCount,
+    pipelinePhase: settings.pipelinePhase,
+    contentMode: settings.contentMode,
+    imageProvider: settings.imageProvider || config.imageProvider,
+    layoutMode: settings.layoutMode,
+    brandName: settings.brandName,
+    newsPrompt: settings.newsPrompt,
+    slidePrompt: settings.slidePrompt,
+    imageStyle: settings.imageStyle
+  }, null, 2));
 
   const { slides } = await getPipelineContent(settings.contentMode, {
     apiKey: config.geminiApiKey,
@@ -114,6 +129,21 @@ function requireValue(value: string | undefined, label: string): string {
   return value;
 }
 
+function warnIfPromptConflictsWithSlideCount(slideCount: number, newsPrompt: string, slidePrompt: string): void {
+  const promptText = `${newsPrompt}\n${slidePrompt}`.toLowerCase();
+  const asksForOne =
+    /\b(return|create|make|generate|build)\s+(one|1|single)\b/.test(promptText) ||
+    /\bone\s+cheat[- ]?sheet\s+slide\b/.test(promptText) ||
+    /\bsingle\s+clean\s+layout\b/.test(promptText);
+
+  if (slideCount > 1 && asksForOne) {
+    console.warn(
+      `Prompt wording asks for one/single slide, but slideCount is ${slideCount}. ` +
+      "The selected slide count will be used. Update the prompt to avoid mixed output."
+    );
+  }
+}
+
 async function getPipelineContent(
   contentMode: "live" | "cache" | "auto",
   options: {
@@ -131,6 +161,10 @@ async function getPipelineContent(
     }
 
     console.log(`Using cached content from ${cached.savedAt}. No Gemini requests used.`);
+    console.log("Cached content items:");
+    console.log(JSON.stringify(cached.newsItems.slice(0, options.slideCount), null, 2));
+    console.log("Cached slide copy:");
+    console.log(JSON.stringify(cached.slides.slice(0, options.slideCount), null, 2));
     return {
       newsItems: cached.newsItems.slice(0, options.slideCount),
       slides: cached.slides.slice(0, options.slideCount)
@@ -164,6 +198,10 @@ async function getPipelineContent(
       const cached = await loadContentCache();
       if (cached) {
         console.log(`Gemini quota hit. Falling back to cached content from ${cached.savedAt}.`);
+        console.log("Cached content items:");
+        console.log(JSON.stringify(cached.newsItems.slice(0, options.slideCount), null, 2));
+        console.log("Cached slide copy:");
+        console.log(JSON.stringify(cached.slides.slice(0, options.slideCount), null, 2));
         return {
           newsItems: cached.newsItems.slice(0, options.slideCount),
           slides: cached.slides.slice(0, options.slideCount)

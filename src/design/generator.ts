@@ -217,24 +217,35 @@ function buildCheatSheetSvg(
   brandName: string,
   palette: SlidePalette
 ): string {
+  const header = getCheatSheetHeader(slide, brandName);
   const rows = extractCheatSheetRows(slide);
+  console.log(`Cheat sheet render topic: ${header.kicker}`);
+  console.log(`Cheat sheet rows for slide ${slideNumber}:`);
+  console.log(JSON.stringify(rows.slice(0, 15), null, 2));
+  const titleSvg = header.titleLines
+    .map((line, index) => textLine(line, 62, 250 + index * 58, 52, 900, "#ffffff"))
+    .join("");
+  const dividerY = header.titleLines.length > 1 ? 330 : 286;
+  const subtitleY = dividerY + 46;
+
   const rowSvg = rows
     .slice(0, 15)
     .map((row, index) => {
-      const y = 500 + index * 78;
+      const y = 430 + index * 56;
       const command = truncate(row.command, 24);
       const description = truncate(row.description, 52);
 
       return `
-  <rect x="62" y="${y - 44}" width="956" height="62" rx="14" fill="#070707" opacity="${index % 2 === 0 ? "0.58" : "0.36"}" stroke="${palette.accent}" stroke-width="1" stroke-opacity="0.28"/>
-  ${textLine(escapeXml(command), 88, y, 28, 900, palette.softText, "Consolas, 'Courier New', monospace")}
-  ${textLine("→", 386, y, 30, 900, palette.accent)}
-  ${textLine(escapeXml(description), 430, y, 26, 600, "#f1f4f8")}`;
+  <rect x="62" y="${y - 36}" width="956" height="44" rx="10" fill="#070707" opacity="${index % 2 === 0 ? "0.62" : "0.42"}" stroke="${palette.accent}" stroke-width="1" stroke-opacity="0.3"/>
+  <circle cx="86" cy="${y - 14}" r="5" fill="${palette.accent}" opacity="0.9"/>
+  ${textLine(escapeXml(command), 108, y, 24, 900, palette.softText, "Consolas, 'Courier New', monospace")}
+  ${textLine("->", 386, y, 24, 900, palette.accent)}
+  ${textLine(escapeXml(description), 430, y, 23, 600, "#f1f4f8")}`;
     })
     .join("");
 
   return `
-<svg width="1080" height="1920" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
+<svg width="1080" height="1350" viewBox="0 0 1080 1350" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="${palette.bgStart}"/>
@@ -252,19 +263,23 @@ function buildCheatSheetSvg(
       </feMerge>
     </filter>
   </defs>
-  <rect width="1080" height="1920" fill="url(#bg)"/>
-  <rect width="1080" height="1920" fill="url(#grid)"/>
+  <rect width="1080" height="1350" fill="url(#bg)"/>
+  <rect width="1080" height="1350" fill="url(#grid)"/>
   <rect x="0" y="0" width="1080" height="26" fill="${palette.accent}"/>
-  <circle cx="930" cy="218" r="250" fill="${palette.accent}" opacity="0.12"/>
-  <circle cx="80" cy="1740" r="300" fill="${palette.secondary}" opacity="0.08"/>
-  <rect x="62" y="82" width="170" height="58" rx="29" fill="${palette.panel}" stroke="${palette.accent}" stroke-width="2"/>
-  ${textLine(`${slideNumber} of ${slideTotal}`, 98, 122, 28, 700, palette.softText)}
-  ${textLine("LINUX", 62, 250, 54, 900, palette.accent)}
-  ${textLine("COMMAND CHEAT SHEET", 62, 320, 60, 900, "#ffffff")}
-  <rect x="62" y="374" width="420" height="8" rx="4" fill="${palette.accent}" filter="url(#glow)"/>
-  ${textLine("Fast terminal commands for daily developer, DevOps, and admin workflows.", 62, 432, 28, 600, "#d7e3f3")}
+  <circle cx="932" cy="156" r="230" fill="${palette.accent}" opacity="0.12"/>
+  <circle cx="72" cy="1250" r="250" fill="${palette.secondary}" opacity="0.08"/>
+  <rect x="62" y="70" width="156" height="50" rx="25" fill="${palette.panel}" stroke="${palette.accent}" stroke-width="2"/>
+  ${textLine(`${slideNumber} of ${slideTotal}`, 96, 104, 24, 700, palette.softText)}
+  <rect x="844" y="76" width="116" height="86" rx="18" fill="${palette.panel}" stroke="${palette.accent}" stroke-width="2" opacity="0.72"/>
+  <ellipse cx="902" cy="96" rx="38" ry="13" fill="none" stroke="${palette.accent}" stroke-width="4"/>
+  <path d="M864 96 V136 C864 144 881 152 902 152 C923 152 940 144 940 136 V96" fill="none" stroke="${palette.accent}" stroke-width="4"/>
+  <path d="M864 116 C864 124 881 132 902 132 C923 132 940 124 940 116" fill="none" stroke="${palette.accent}" stroke-width="4" opacity="0.7"/>
+  ${textLine(header.kicker, 62, 190, 44, 900, palette.accent)}
+  ${titleSvg}
+  <rect x="62" y="${dividerY}" width="420" height="8" rx="4" fill="${palette.accent}" filter="url(#glow)"/>
+  ${textLine(escapeXml(header.subtitle), 62, subtitleY, 25, 600, "#d7e3f3")}
   ${rowSvg}
-  ${textLine(escapeXml(brandName), 702, 1780, 28, 800, "#8aa8bd")}
+  ${textLine(escapeXml(brandName), 702, 1278, 28, 800, "#8aa8bd")}
 </svg>`;
 }
 
@@ -565,33 +580,53 @@ Make the slide readable on a phone screen. Keep text inside safe margins. Avoid 
 
 function isCheatSheetSlide(slide: SlideContent): boolean {
   const text = `${slide.headline} ${slide.body} ${slide.tag} ${slide.sourceTitle ?? ""}`.toLowerCase();
-  return text.includes("cheat sheet") || text.includes("linux") || text.includes("command");
+  return text.includes("cheat sheet") || text.includes("infographic") || text.includes("command") || parseRowsFromText(slide.body).length >= 3;
+}
+
+interface CheatSheetHeader {
+  kicker: string;
+  titleLines: string[];
+  subtitle: string;
+}
+
+function getCheatSheetHeader(slide: SlideContent, brandName: string): CheatSheetHeader {
+  const cleanBrand = brandName.trim() || "Tech";
+  const kicker = cleanBrand.split(/\s+/)[0].replace(/[^a-z0-9+#.]/gi, "").toUpperCase() || "DEV";
+  const title = slide.headline.trim() || cleanBrand;
+  const subtitle = summarizeDescription(slide.body) || "quick reference for practical developer workflows";
+
+  return {
+    kicker,
+    titleLines: wrapText(title, 24, 2),
+    subtitle: truncate(subtitle, 76)
+  };
 }
 
 function extractCheatSheetRows(slide: SlideContent): Array<{ command: string; description: string }> {
-  const base = [
-    { command: extractCommand(slide), description: summarizeDescription(slide.body) }
-  ];
+  const parsedRows = parseRowsFromText(slide.body);
+  const base = parsedRows.length
+    ? parsedRows
+    : [{ command: extractCommand(slide), description: summarizeDescription(slide.body) }];
 
-  const linuxDefaults = [
-    { command: "touch file.txt", description: "create an empty file" },
-    { command: "cat file.txt", description: "print file contents" },
-    { command: "cp src dest", description: "copy files or folders" },
-    { command: "mv src dest", description: "move or rename files" },
-    { command: "ls -la", description: "list all files with details" },
-    { command: "find . -name \"*.log\"", description: "search files by name" },
-    { command: "grep -i \"text\" file", description: "search text ignoring case" },
-    { command: "chmod +x script.sh", description: "make a script executable" },
-    { command: "chown user file", description: "change file owner" },
-    { command: "df -h", description: "show disk usage" },
-    { command: "du -sh folder", description: "show folder size" },
-    { command: "ps aux", description: "list running processes" },
-    { command: "kill -9 PID", description: "force stop a process" },
-    { command: "curl -I URL", description: "check HTTP response headers" },
-    { command: "ssh user@host", description: "connect to a remote server" }
-  ];
+  return dedupeRows(base).filter((row) => row.command && row.description);
+}
 
-  return dedupeRows([...base, ...linuxDefaults]);
+function parseRowsFromText(text: string): Array<{ command: string; description: string }> {
+  return text
+    .split(/\r?\n|;/)
+    .map((line) => line.trim().replace(/^[-*]\s*/, ""))
+    .map((line) => {
+      const match = line.match(/^`?([^`:-]{2,40})`?\s*(?:--|->|=>|\u2013|\u2014|:|-)\s*(.{4,120})$/);
+      if (!match) {
+        return undefined;
+      }
+
+      return {
+        command: match[1].trim().toUpperCase(),
+        description: match[2].trim().replace(/[.]$/, "").toLowerCase()
+      };
+    })
+    .filter((row): row is { command: string; description: string } => Boolean(row));
 }
 
 function summarizeDescription(body: string): string {

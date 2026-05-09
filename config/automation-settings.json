@@ -1,20 +1,20 @@
 {
   "postType": "carousel",
-  "slideCount": 6,
+  "slideCount": 5,
   "pipelinePhase": "publish",
   "contentMode": "live",
   "imageProvider": "local",
-  "layoutMode": "cheatsheet",
-  "brandName": "Linux Commands",
-  "newsPrompt": "Create a modern futuristic SQL commands infographic poster for Instagram/social media. Show 10–15 useful SQL commands in a single clean layout. Dark cyberpunk theme with black and deep navy background, glowing orange neon accents, subtle grid lines, futuristic UI panels, modern developer aesthetic, bold white typography, mobile-readable design.\n\nLayout style:\n\n* Each SQL command inside compact glowing cards/panels\n* Include command name + short one-line explanation\n* Use terminal/code style fonts\n* Add small database/SQL/dev icons\n* Organized grid layout with proper spacing\n* High contrast and ultra-sharp details\n* Clean infographic style optimized for Instagram portrait post (4:5 ratio)\n\nCommands to include:\n\n* SELECT — retrieve data from tables\n* INSERT — add new records\n* UPDATE — modify existing records\n* DELETE — remove records\n* CREATE TABLE — create new tables\n* DROP TABLE — delete tables permanently\n* ALTER TABLE — modify table structure\n* WHERE — filter records\n* ORDER BY — sort query results\n* GROUP BY — group rows with aggregation\n* JOIN — combine data from multiple tables\n* COUNT — count records\n* DISTINCT — remove duplicate results\n* LIMIT — restrict number of rows\n* INDEX — improve query performance\n\nDesign keywords:\nfuturistic SQL terminal UI, orange neon glow, hacker aesthetic, database admin vibe, cybersecurity style, premium infographic, modern coding culture, creator-style tech content, cinematic lighting, clean hierarchy, terminal-inspired visuals, futuristic data dashboard",
-  "slidePrompt": "Make the copy factual, readable, and energetic.",
-  "imageStyle": "Dark breaking-news technology poster, red neon alert theme, deep black and dark crimson background, glowing red accent bars, subtle digital grid lines, urgent newsroom aesthetic, bold white uppercase headline typography, clean mobile-readable layout, high contrast, cinematic lighting, futuristic alert panels, red gradients, minimal but premium composition, modern infographic style, sci-fi interface elements, professional digital news branding, sharp details, strong visual hierarchy.",
+  "layoutMode": "steps",
+  "brandName": "Python Cheat Sheet",
+  "newsPrompt": "Create a modern futuristic Python cheat-sheet infographic for developers. Include lists, tuples, sets, dictionaries, functions, lambda, map, filter, list comprehensions, classes, exceptions, file handling, virtualenv, pip, and decorators. Use a dark coding theme with glowing blue accents.",
+  "slidePrompt": "Return exactly 5 cheat-sheet slides. Split the requested Python topics across the slides. Put rows in each body as TOPIC - short explanation; TOPIC - short explanation. Keep explanations short and mobile readable. Use only the requested Python topics.",
+  "imageStyle": "Dark hacker-style tech poster, green neon matrix theme, black terminal-inspired background, glowing green accent bars, subtle command-line grid texture, terminal UI panels, bold white uppercase headline typography, monospace command details, clean mobile-readable layout, high contrast, futuristic DevOps and cybersecurity aesthetic, glowing green gradients, minimal premium composition, modern infographic style, professional developer branding, elegant spacing, dynamic visual hierarchy.",
   "reel": {
     "secondsPerSlide": 5,
     "audioPath": "",
     "caption": ""
   },
   "carousel": {
-    "caption": "⚡ Master the SQL commands every developer should know.\nFrom `SELECT` to `JOIN`, these are the building blocks of databases & backend systems. 💾🔥\n\nSave this post for your coding journey 🚀\nWhich SQL command do you use the most? 👀\n\n#SQL #Database #Programming #Developer #Coding #MySQL #PostgreSQL #DataScience #BackendDeveloper #LearnToCode #Tech #CyberSecurity #DevOps #CodeNewbie #ProgrammerLife #Linux #AI #CodingTips #SoftwareEngineer #TechContent"
+    "caption": "🐍 Python essentials every developer should master ⚡\nFrom data structures to decorators — everything you need in one futuristic cheat sheet 💻🚀\n\nSave this post for your next coding session 🔖\n\n#Python #PythonProgramming #Developer #Coding #Programming #SoftwareEngineer #CodeNewbie #LearnPython #Developers #Tech #CodingLife #ProgrammingLife #PythonDeveloper #DeveloperTools #Automation #WebDevelopment #AI #MachineLearning #TechCommunity #CodeEveryday"
   }
 }

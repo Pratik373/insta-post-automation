@@ -42,14 +42,19 @@ Rules:
 - sourceUrl: copy the original source URL
 - Make the copy factual, readable, and energetic.
 - Do not invent facts beyond the input items.
-- If the input is about Linux commands, each slide must teach ONE specific command.
-- For command slides, put the command or syntax in the headline, and include a concrete example in the body.
-- Do not write generic collection copy like "50+ commands", "cheat sheet unveiled", "unlock powerful commands", or "master Linux commands".
+- Follow the user's requested topic, title, layout, and content type exactly.
+- If the user asks for a cheat sheet, infographic, roundup, or list, the body may contain compact semicolon-separated rows in this format: ITEM - short explanation.
+- If the user asks for one item per slide, put the item name or syntax in the headline and include a concrete example in the body.
+- Do not switch topics. For example, never turn SQL into Linux, Git into Docker, or a framework prompt into generic AI news.
+- Do not write generic collection copy like "50+ commands", "cheat sheet unveiled", "unlock powerful commands", or "master commands".
 ${options.prompt ?? ""}
 
 Content items:
 ${JSON.stringify(newsItems.slice(0, options.slideCount), null, 2)}
 `;
+
+  console.log("Gemini slide-copy prompt:");
+  console.log(prompt.trim());
 
   const response = await ai.models.generateContent({
     model: options.model,
@@ -59,11 +64,20 @@ ${JSON.stringify(newsItems.slice(0, options.slideCount), null, 2)}
     }
   });
 
-  const slides = parseJsonArray<SlideContent>(response.text ?? "", "slide copy");
-  return slides
+  const rawText = response.text ?? "";
+  console.log("Gemini slide-copy raw response:");
+  console.log(rawText);
+
+  const slides = parseJsonArray<SlideContent>(rawText, "slide copy");
+  const parsedSlides = slides
     .filter(isValidSlideContent)
     .slice(0, options.slideCount)
     .map(normalizeSlide);
+
+  console.log("Parsed slide copy:");
+  console.log(JSON.stringify(parsedSlides, null, 2));
+
+  return parsedSlides;
 }
 
 function isValidSlideContent(slide: SlideContent): boolean {

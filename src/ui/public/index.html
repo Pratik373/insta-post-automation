@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI News Automation</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Instagram Automation</p>
+          <h1>AI News Reel Studio</h1>
+        </div>
+        <button id="runButton" class="primary">Run Pipeline</button>
+      </header>
+
+      <section class="grid">
+        <form id="settingsForm" class="panel">
+          <h2>Publishing</h2>
+          <div class="row">
+            <label>
+              Post type
+              <select name="postType">
+                <option value="reel">Reel</option>
+                <option value="carousel">Carousel</option>
+              </select>
+            </label>
+            <label>
+              Phase
+              <select name="pipelinePhase">
+                <option value="content">Content only</option>
+                <option value="images">Media only</option>
+                <option value="upload">Upload only</option>
+                <option value="publish">Publish</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            Content mode
+            <select name="contentMode">
+              <option value="auto">Auto fallback</option>
+              <option value="cache">Cache only</option>
+              <option value="live">Live Gemini</option>
+            </select>
+          </label>
+
+          <label>
+            Layout
+            <select name="layoutMode">
+              <option value="auto">Auto</option>
+              <option value="news">News card</option>
+              <option value="breaking">Breaking alert</option>
+              <option value="stat">Big stat card</option>
+              <option value="steps">Tutorial steps</option>
+              <option value="single">Single command card</option>
+              <option value="cheatsheet">Dense cheat sheet</option>
+            </select>
+          </label>
+
+          <div class="row">
+            <label>
+              Slide count
+              <input name="slideCount" type="number" min="1" max="10">
+            </label>
+            <label>
+              Seconds per slide
+              <input name="secondsPerSlide" type="number" min="2" max="10">
+            </label>
+          </div>
+
+          <label>
+            Brand name
+            <input name="brandName" type="text">
+          </label>
+
+          <h2>AI Controls</h2>
+          <label>
+            News fetcher prompt
+            <textarea name="newsPrompt" rows="6"></textarea>
+          </label>
+          <label>
+            Slide copy prompt
+            <textarea name="slidePrompt" rows="4"></textarea>
+          </label>
+          <label>
+            Image making style
+            <textarea name="imageStyle" rows="5"></textarea>
+          </label>
+
+          <h2>Audio</h2>
+          <label>
+            Local audio path
+            <input name="audioPath" type="text" placeholder="songs/music.mp3">
+          </label>
+          <label class="filebox">
+            Upload song file
+            <input id="audioUpload" type="file" accept="audio/*">
+          </label>
+
+          <h2>Captions</h2>
+          <label>
+            Reel caption
+            <textarea name="reelCaption" rows="4"></textarea>
+          </label>
+          <label>
+            Carousel caption
+            <textarea name="carouselCaption" rows="4"></textarea>
+          </label>
+
+          <button class="secondary" type="submit">Save Settings</button>
+        </form>
+
+        <aside class="panel status">
+          <h2>Status</h2>
+          <pre id="statusBox">Loading settings...</pre>
+          <p class="note">Songs uploaded here are embedded into the MP4. Instagram’s licensed music picker cannot be controlled through the publishing API.</p>
+        </aside>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>

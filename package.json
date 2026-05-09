@@ -1,0 +1,31 @@
+{
+  "name": "instagram-ai-tech-news-automation",
+  "version": "1.0.0",
+  "description": "Automated AI/tech news carousel generation and Instagram publishing.",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "ui": "ts-node src/ui/server.ts",
+    "schedule": "ts-node src/scheduler/cron.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@google/genai": "^1.28.0",
+    "cloudinary": "^2.8.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "fluent-ffmpeg": "^2.1.3",
+    "multer": "^2.1.1",
+    "node-cron": "^4.2.1",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/fluent-ffmpeg": "^2.1.28",
+    "@types/multer": "^2.1.0",
+    "@types/node": "^24.10.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

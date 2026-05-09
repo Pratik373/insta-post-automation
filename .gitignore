@@ -1,0 +1,10 @@
+node_modules/
+dist/
+output/
+.env
+.env.local
+songs/*.mp3
+songs/*.wav
+songs/*.m4a
+npm-debug.log*
+*.tsbuildinfo

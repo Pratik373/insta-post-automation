@@ -1,13 +1,13 @@
 {
   "postType": "carousel",
-  "slideCount": 5,
+  "slideCount": 6,
   "pipelinePhase": "publish",
-  "contentMode": "live",
+  "contentMode": "cache",
   "imageProvider": "local",
-  "layoutMode": "steps",
-  "brandName": "Python Cheat Sheet",
-  "newsPrompt": "Create a modern futuristic Python cheat-sheet infographic for developers. Include lists, tuples, sets, dictionaries, functions, lambda, map, filter, list comprehensions, classes, exceptions, file handling, virtualenv, pip, and decorators. Use a dark coding theme with glowing blue accents.",
-  "slidePrompt": "Return exactly 5 cheat-sheet slides. Split the requested Python topics across the slides. Put rows in each body as TOPIC - short explanation; TOPIC - short explanation. Keep explanations short and mobile readable. Use only the requested Python topics.",
+  "layoutMode": "stat",
+  "brandName": "GIT Commands",
+  "newsPrompt": "Create one Git commands cheat-sheet infographic for developers. Include status, add, commit, push, pull, branch, checkout, merge, rebase, log, diff, stash, clone, fetch, and reset. Use a dark terminal theme with green neon accents.",
+  "slidePrompt": "Return one cheat-sheet slide. Put rows in body as COMMAND - short explanation; COMMAND - short explanation. Use only the requested Git commands.",
   "imageStyle": "Dark hacker-style tech poster, green neon matrix theme, black terminal-inspired background, glowing green accent bars, subtle command-line grid texture, terminal UI panels, bold white uppercase headline typography, monospace command details, clean mobile-readable layout, high contrast, futuristic DevOps and cybersecurity aesthetic, glowing green gradients, minimal premium composition, modern infographic style, professional developer branding, elegant spacing, dynamic visual hierarchy.",
   "reel": {
     "secondsPerSlide": 5,
@@ -15,6 +15,6 @@
     "caption": ""
   },
   "carousel": {
-    "caption": "🐍 Python essentials every developer should master ⚡\nFrom data structures to decorators — everything you need in one futuristic cheat sheet 💻🚀\n\nSave this post for your next coding session 🔖\n\n#Python #PythonProgramming #Developer #Coding #Programming #SoftwareEngineer #CodeNewbie #LearnPython #Developers #Tech #CodingLife #ProgrammingLife #PythonDeveloper #DeveloperTools #Automation #WebDevelopment #AI #MachineLearning #TechCommunity #CodeEveryday"
+    "caption": "#git #github"
   }
 }

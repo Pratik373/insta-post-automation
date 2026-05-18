@@ -121,10 +121,11 @@ async function postToInstagramGraph(
   });
 
   const payload = (await response.json()) as GraphApiResponse;
-  if (!response.ok || payload.error) {
-    const error = payload.error;
+  const error = payload.error;
+  if (!response.ok || error) {
+    const details = JSON.stringify(payload, null, 2);
     throw new Error(
-      `Instagram Graph API error (${response.status}): ${error?.message ?? "Unknown error"}`
+      `Instagram Graph API error (${response.status}): ${error?.message ?? "Unknown error"} | payload: ${details}`
     );
   }
 
@@ -145,10 +146,11 @@ async function getFromInstagramGraph(
 
   const response = await fetch(url);
   const payload = (await response.json()) as GraphApiResponse & { status_code?: string };
-  if (!response.ok || payload.error) {
-    const error = payload.error;
+  const error = payload.error;
+  if (!response.ok || error) {
+    const details = JSON.stringify(payload, null, 2);
     throw new Error(
-      `Instagram Graph API error (${response.status}): ${error?.message ?? "Unknown error"}`
+      `Instagram Graph API error (${response.status}): ${error?.message ?? "Unknown error"} | payload: ${details}`
     );
   }
 
@@ -164,9 +166,9 @@ function resolveGraphHost(options: PublishCarouselOptions): string {
     return "graph.instagram.com";
   }
 
-  return options.pageAccessToken.startsWith("IGA")
-    ? "graph.instagram.com"
-    : "graph.facebook.com";
+  // Instagram Graph API publishing endpoints should generally use the Facebook Graph host.
+  // Use `INSTAGRAM_GRAPH_HOST=instagram` only if your setup explicitly requires the Instagram host.
+  return "graph.facebook.com";
 }
 
 function requireGraphId(response: GraphApiResponse, label: string): string {

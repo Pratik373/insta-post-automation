@@ -67,6 +67,9 @@ app.post("/api/run", async (_request, response) => {
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     appendLog(`ERROR: ${message}`);
+    if (error instanceof Error && error.stack) {
+      console.error(error.stack);
+    }
     response.status(500).end(JSON.stringify({ ok: false, error: message, logs: recentLogs }));
   } finally {
     isPipelineRunning = false;

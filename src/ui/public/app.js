@@ -104,7 +104,23 @@ runButton.addEventListener("click", async () => {
 
   try {
     const response = await fetch("/api/run", { method: "POST" });
-    const result = await response.json();
+    let result;
+
+    try {
+      result = await response.json();
+    } catch (parseError) {
+      const text = await response.text();
+      throw new Error(`Server returned ${response.status}: ${text}`);
+    }
+
+    if (!response.ok) {
+      writeStatus(`Pipeline failed (${response.status}).`, { error: result?.error, logs: result?.logs });
+      if (result?.logs?.length) {
+        statusBox.textContent = `Pipeline failed (${response.status}).\n\n${result.logs.join("\n")}`;
+      }
+      return;
+    }
+
     writeStatus(result.ok ? "Pipeline finished." : "Pipeline failed.", {
       ...result,
       logs: undefined
@@ -112,6 +128,8 @@ runButton.addEventListener("click", async () => {
     if (result.logs?.length) {
       statusBox.textContent = `${result.ok ? "Pipeline finished." : "Pipeline failed."}\n\n${result.logs.join("\n")}`;
     }
+  } catch (error) {
+    writeStatus(`Pipeline run failed: ${error.message}`);
   } finally {
     window.clearInterval(poller);
     runInFlight = false;
